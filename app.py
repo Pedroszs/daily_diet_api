@@ -50,6 +50,18 @@ def upd_register(id_diet):
     
     return jsonify({"messagem": "A tarefa selecionada não existe"}), 400
 
+@app.route("/diet/<int:id_diet>", methods=["DELETE"])
+def del_register(id_diet):
+    diet_del = Diet.query.get(id_diet)
+
+    if diet_del:
+        db.session.delete(diet_del)
+        db.session.commit()
+        return jsonify ({"message": f"Registro {id_diet} deletado com sucesso!!"})
+    
+    return jsonify({"message": "O registro insediro não existe"}), 400
+
+
 
 
 
