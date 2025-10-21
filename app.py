@@ -62,6 +62,7 @@ def create_user():
 
 
 @app.route("/diet", methods=["POST"])
+@login_required
 def new_register():
     data = request.json
     name = data.get("name")
@@ -77,7 +78,8 @@ def new_register():
             name=name,
             description=description,
             date_time=date_time_obj,
-            f_diet=f_diet
+            f_diet=f_diet,
+            user_id=current_user.id
         )
         db.session.add(user_diet)
         db.session.commit()
@@ -86,6 +88,7 @@ def new_register():
     return jsonify({"message": "Verifique se foram adicionadas todas as informações necessárias."}), 404
 
 @app.route("/diet/<int:id_diet>", methods=["PUT"])
+@login_required
 def upd_register(id_diet):
     data = request.json
     diet = Diet.query.get(id_diet)
@@ -101,6 +104,7 @@ def upd_register(id_diet):
     return jsonify({"messagem": "A tarefa selecionada não existe"}), 400
 
 @app.route("/diet/<int:id_diet>", methods=["DELETE"])
+@login_required
 def del_register(id_diet):
     diet_del = Diet.query.get(id_diet)
 
@@ -111,11 +115,17 @@ def del_register(id_diet):
     
     return jsonify({"message": "O registro insediro não existe"}), 400
 
-
-
-
-
-
+@app.route("/meus_registros", methods=["GET"])
+@login_required
+def meus_registros():
+    diets = current_user.diets
+    return jsonify([{
+        "id": d.id,
+        "name": d.name,
+        "description": d.description,
+        "date_time": d.date_time.isoformat(),
+        "f_diet": d.f_diet
+    } for d in diets])
 
 
 if __name__ == "__main__":
