@@ -13,7 +13,7 @@ services:
       # Opens port 3306 on the container
       - '3306'
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql_data:/var/lib/mysql
       
 volumes:
   mysql_data:
