@@ -127,6 +127,23 @@ def meus_registros():
         "f_diet": d.f_diet
     } for d in diets])
 
+@app.route("/meus_registros/<int:id_diet>", methods=["GET"])
+@login_required
+def registro_especifico(id_diet):
+    diet = Diet.query.get(id_diet)
+
+    if diet:
+        return jsonify([{
+            "id": diet.id,
+            "name": diet.name,
+            "description": diet.description,
+            "date_time": diet.date_time.isoformat(),
+            "f_diet": diet.f_diet
+        }])
+    
+    return jsonify({"message": "não existe!!"}), 400
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
